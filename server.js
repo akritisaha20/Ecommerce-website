@@ -14,6 +14,9 @@ const USERS_FILE = path.join(__dirname, "users.json");
 app.use(cors());
 app.use(express.json());
 
+// Serve static frontend files (index.html, shop.html, assets, etc.)
+app.use(express.static(__dirname));
+
 // Helper: read users from the JSON file
 function readUsers() {
   if (!fs.existsSync(USERS_FILE)) {
@@ -66,6 +69,11 @@ app.post("/api/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
   }
+});
+
+// Fallback: serve index.html for the root route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // Start Server
